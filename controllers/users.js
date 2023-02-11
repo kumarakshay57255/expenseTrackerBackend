@@ -22,13 +22,13 @@ exports.loginUser  = async (req,res)=>{
         const {email,password} = req.body;
          const user = await User.findOne({where:{email}});
          if(!user){
-            return res.status(404).send('User not found');
+            return res.status(404);
          }
         if(user.dataValues.password === password){
            return res.status(200).send('User login succesfully');
         }
         else{
-            return res.status(401).send('Password not match');s
+            return res.status(401);
         }
 
     } catch (error) {
