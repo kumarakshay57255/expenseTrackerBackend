@@ -3,12 +3,14 @@ const bodyParser = require('body-parser');
 const sequelize = require('./utils/database')
 const cors = require('cors')
 const userRouter = require('./routes/user');
+const expenseRouter = require('./routes/expense');
 const app = express();
 
 app.use(express.json())
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cors())
 app.use('/',userRouter);
+app.use('/expense',expenseRouter);
 
 
 sequelize.sync().then(result=>{

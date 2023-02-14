@@ -38,7 +38,7 @@ const login = async (req, res) => {
     if(isstringinvalid(email) || isstringinvalid(password)){
         return res.status(400).json({message: 'EMail id or password is missing ', success: false})
     }
-    console.log(password);
+  
     const user  = await User.findAll({ where : { email }})
         if(user.length > 0){
            bcrypt.compare(password, user[0].password, (err, result) => {
