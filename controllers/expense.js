@@ -20,7 +20,21 @@ const getExpense = async (req,res)=>{
     }
 }
 
+const deleteExpense = async (req,res) =>{
+    try {
+        const {id} = req.params;
+          await Expense.destroy({where:{id}});
+          return res.status(200).json({sucess:true,message: "Deleted Successfuly"})
+    } catch (error) {
+        return res.status(500).json({ success: true, message: "Failed"})
+    }
+}
+
+
+
+
 module.exports={
     addExpense,
-    getExpense
+    getExpense,
+    deleteExpense
 }
