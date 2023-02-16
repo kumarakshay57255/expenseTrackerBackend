@@ -1,5 +1,7 @@
 const User = require('../models/users');
 const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
 function isstringinvalid(string){
     if(string == undefined ||string.length === 0){
@@ -7,6 +9,10 @@ function isstringinvalid(string){
     } else {
         return false
     }
+}
+
+function generateAccessToken(id){
+      return jwt.sign({userId:id},process.env.secret)
 }
 
 const signUp = async(req,res)=>{
@@ -40,13 +46,14 @@ const login = async (req, res) => {
     }
   
     const user  = await User.findAll({ where : { email }})
+   
         if(user.length > 0){
            bcrypt.compare(password, user[0].password, (err, result) => {
            if(err){
             throw new Error('Something went wrong')
            }
             if(result === true){
-                return res.status(200).json({success: true, message: "User logged in successfully"})
+                return res.status(200).json({success: true, message: "User logged in successfully",token:generateAccessToken(user[0].id)});
             }
             else{
             return res.status(400).json({success: false, message: 'Password is incorrect'})
