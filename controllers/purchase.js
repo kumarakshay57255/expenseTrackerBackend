@@ -35,7 +35,9 @@ const updateTransactionStatus = async (req, res ) => {
         const promise1 =  Order.update({ paymentid: payment_id, status: 'SUCCESSFUL'},{where:{orderid:order_id,userId:userId}}) ;
         const promise2 =  User.update({ ispremiumuser: true },{where:{id:userId}}) 
 
-        Promise.all([promise1, promise2])
+        Promise.all([promise1, promise2]).then(()=>{
+            res.json({success:true,msg:'You are premium user now!'});
+        })
 
         
                 

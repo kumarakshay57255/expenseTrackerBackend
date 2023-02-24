@@ -11,8 +11,8 @@ function isstringinvalid(string){
     }
 }
 
-function generateAccessToken(id){
-      return jwt.sign({userId:id},process.env.secret)
+function generateAccessToken(id,ispremiumuser){
+      return jwt.sign({userId:id,ispremiumuser:ispremiumuser},process.env.secret)
 }
 
 const signUp = async(req,res)=>{
@@ -46,14 +46,13 @@ const login = async (req, res) => {
     }
   
     const user  = await User.findAll({ where : { email }})
-   
         if(user.length > 0){
            bcrypt.compare(password, user[0].password, (err, result) => {
            if(err){
             throw new Error('Something went wrong')
            }
             if(result === true){
-                return res.status(200).json({success: true, message: "User logged in successfully",token:generateAccessToken(user[0].id)});
+                return res.status(200).json({success: true, message: "User logged in successfully",token:generateAccessToken(user[0].id,user[0].ispremiumuser)});
             }
             else{
             return res.status(400).json({success: false, message: 'Password is incorrect'})
