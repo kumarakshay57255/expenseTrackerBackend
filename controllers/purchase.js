@@ -1,7 +1,10 @@
 const Razorpay = require('razorpay');
 const Order = require('../models/orders');
 const User = require('../models/users');
+const userController = require('../controllers/users');
 require('dotenv').config();
+
+
 
 const purchasePremium = async(req, res) => {
     try {
@@ -36,7 +39,7 @@ const updateTransactionStatus = async (req, res ) => {
         const promise2 =  User.update({ ispremiumuser: true },{where:{id:userId}}) 
 
         Promise.all([promise1, promise2]).then(()=>{
-            res.json({success:true,msg:'You are premium user now!'});
+           res.json({success:true,msg:'You are premium user now!',token:userController.generateAccessToken(userId,true)});
         })
 
         

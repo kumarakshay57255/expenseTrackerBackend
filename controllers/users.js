@@ -68,5 +68,6 @@ const login = async (req, res) => {
 
 module.exports={
     login,
-    signUp
+    signUp,
+    generateAccessToken
 }
