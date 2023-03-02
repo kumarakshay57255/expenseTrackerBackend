@@ -1,19 +1,12 @@
 const User = require('../models/users')
-const Expense = require('../models/expense');
-const sequelize = require('../utils/database');
+
 
 const showleader = async (req,res)=>{
     try {
          let users =  await User.findAll({
-            attributes:['id','name',[sequelize.fn('sum',sequelize.col('expenses.expenseamount')),'totalcost']],
-            include:[
-                {
-                    model:Expense,
-                    attributes:[]
-                }
-            ],
-            group:['users.id'],
-            order:[['totalcost','DESC']]
+            attributes:['name','totalexpense'],
+            order:[['totalexpense','DESC']]
+            
          });
 
 

@@ -12,6 +12,10 @@ const Users = sequelize.define('users',{
         type:DataTypes.STRING,
         allowNull:false,
     },
+    totalexpense:{
+      type:DataTypes.INTEGER,
+      defaultValue:0
+    },
     email:{
         type:DataTypes.STRING,
         allowNull:false,
