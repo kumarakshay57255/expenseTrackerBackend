@@ -1,16 +1,21 @@
 const Expense = require('../models/expense');
 const User = require('../models/users');
+const sequelize = require('../utils/database');
+let t;
 
 const addExpense = async (req,res)=>{
+ 
     try {
+        t = await sequelize.transaction();  
      const id = req.user.dataValues.id;
         const {expenseamount,category,description} = req.body;
-        const expense =  await Expense.create({expenseamount,category,description,userId:id});
+        const expense =  await Expense.create({expenseamount,category,description,userId:id},{transaction:t});
         const totalexpense = Number(req.user.dataValues.totalexpense) + Number(expenseamount)
-          await User.update({totalexpense:totalexpense},{where:{id}})
+          await User.update({totalexpense:totalexpense},{where:{id},transaction:t},);
+        await t.commit();
          return res.status(200).json({expense,sucess:true});
     } catch (err) {
-        
+         await  t.rollback();
         res.status(500).json({sucess:false,error:err});
     }
 }
@@ -28,11 +33,26 @@ const getExpense = async (req,res)=>{
 
 const deleteExpense = async (req,res) =>{
     try {
-        
+         t= await sequelize.transaction();
         const {id} = req.params;
-          await Expense.destroy({where:{id}});
+          const expense = await Expense.findAll({where:{id},transaction:t});
+          const userId = expense[0].userId;
+         const totalexpense = Number(req.user.dataValues.totalexpense)-Number(expense[0].expenseamount);
+         await User.update({totalexpense,transaction:t},{where:{id:userId}});
+         await Expense.destroy({where:{id},transaction:t});
+    
+       
+        // console.log('id---->',id);
+        // const expense = await Expense.findAll({where:{id}});
+        // console.log('expense--->',expense)
+        //   const users = await User.findAll();
+        //   console.log('user---->',users);
+        //   await Expense.destroy({where:{id}});
+            await t.commit();
           return res.status(200).json({sucess:true,message: "Deleted Successfuly"})
     } catch (error) {
+        console.log(error);
+        await t.rollback();
         return res.status(500).json({ success: true, message: "Failed"})
     }
 }

@@ -5,5 +5,5 @@ const userAuthenticate = require('../middlewares/auth');
 
 router.post('/',userAuthenticate.authenticate,expenseController.addExpense);
 router.get('/',userAuthenticate.authenticate,expenseController.getExpense);
-router.delete('/:id',expenseController.deleteExpense);
+router.delete('/:id',userAuthenticate.authenticate,expenseController.deleteExpense);
 module.exports = router;
