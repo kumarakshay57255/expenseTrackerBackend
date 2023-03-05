@@ -3,6 +3,8 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+
+
 function isstringinvalid(string){
     if(string == undefined ||string.length === 0){
         return true
@@ -66,8 +68,10 @@ const login = async (req, res) => {
     }
 }
 
+
+
 module.exports={
     login,
     signUp,
-    generateAccessToken
+    generateAccessToken,
 }
