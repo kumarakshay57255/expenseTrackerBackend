@@ -106,7 +106,7 @@ const downloadExpense = async(req,res)=>{
          console.log(fileURL)
           res.status(200).json({fileURL,sucess:true})
     } catch (error) {
-        
+        return res.status(500).json({sucess:false,error});
     }
 }
 
