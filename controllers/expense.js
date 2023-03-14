@@ -1,6 +1,7 @@
 const Expense = require('../models/expense');
 const User = require('../models/users');
-const AWS  = require('aws-sdk');
+const DownloadExpense = require('../models/downloadexpense')
+
 const sequelize = require('../utils/database');
 const s3Services = require('../services/s3Services');
 
@@ -75,6 +76,7 @@ const downloadExpense = async(req,res)=>{
 
          const filename = `Expense${userId}/${new Date().toLocaleDateString()}.txt`;
          const fileURL =  await s3Services.uploadToS3(stringifiedExpenses,filename);
+        await DownloadExpense.create({url:fileURL,userId:req.user.id});
           res.status(200).json({fileURL,sucess:true})
     } catch (error) {
         console.log(error)

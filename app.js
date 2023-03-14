@@ -9,10 +9,12 @@ const purchaseRoute = require('./routes/purchase');
 const resetPasswordRoute = require('./routes/resetpassword');
 const leaderRoute =  require('./routes/leader');
 
-const User = require('./models/users');
+
+const Users = require('./models/users');
 const Order = require('./models/orders')
 const Expense = require('./models/expense');
 const ForgotPassword = require('./models/forgotpassword');
+const DownloadExpense = require('./models/downloadexpense');
 const app = express();
 
 
@@ -25,14 +27,17 @@ app.use('/purchase',purchaseRoute);
 app.use('/premium',leaderRoute);
 app.use('/password',resetPasswordRoute);
 
-User.hasMany(Expense);
-Expense.belongsTo(User);
+Users.hasMany(Expense);
+Expense.belongsTo(Users);
 
-User.hasMany(Order);
-Order.belongsTo(User);
+Users.hasMany(Order);
+Order.belongsTo(Users);
 
-User.hasMany(ForgotPassword);
-ForgotPassword.belongsTo(User);
+Users.hasMany(ForgotPassword);
+ForgotPassword.belongsTo(Users);
+
+Users.hasMany(DownloadExpense);
+DownloadExpense.belongsTo(Users)
 
 sequelize.sync({force:false}).then(result=>{
     console.log(result)
