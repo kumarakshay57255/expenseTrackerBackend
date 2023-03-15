@@ -29,10 +29,22 @@ const addExpense = async (req,res)=>{
 
 const getExpense = async (req,res)=>{
     try {
-        
+        const page = +req.query.page||1;
+
+        const LIMIT_PER_PAGE = 2;
+        const expenseCount = await Expense.count();
         const id = req.user.dataValues.id;
-        const expense = await Expense.findAll({where:{userId:id}});
-        return res.status(200).json({expense,sucess:true});
+        const expense = await Expense.findAll({where:{userId:id},offset:(page-1)*LIMIT_PER_PAGE,limit:LIMIT_PER_PAGE});
+        return res.status(200).json({
+           expense,
+           currentPage:page,
+           hashNextPage:LIMIT_PER_PAGE*page<expenseCount,
+           nextPage:page+1,
+           hashPreviousPage:page>1,
+           previousPage:page-1,
+           lastPage:Math.ceil(expenseCount/LIMIT_PER_PAGE)
+})
+     
     } catch (error) {
         res.status(500).json({sucess:false,error:err});
     }
