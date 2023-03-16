@@ -31,7 +31,7 @@ const getExpense = async (req,res)=>{
     try {
         const page = +req.query.page||1;
 
-        const LIMIT_PER_PAGE = 2;
+        const LIMIT_PER_PAGE = +req.query.limit||2;
         const expenseCount = await Expense.count();
         const id = req.user.dataValues.id;
         const expense = await Expense.findAll({where:{userId:id},offset:(page-1)*LIMIT_PER_PAGE,limit:LIMIT_PER_PAGE});
